@@ -4,8 +4,6 @@ Organize tarefas e acompanhe seus chats do Codex em um painel local no navegador
 
 **Windows · Node.js 24+ · MIT · versão 0.1.3**
 
-![Monitor Codex com exemplos fictícios](docs/images/monitor-demo.png)
-
 O aplicativo reúne **Tarefas → Monitor Codex → Uso do Codex**. Tem interface e banco próprios, sem NocoBase, Docker ou extensão de navegador. É um projeto independente, sem vínculo oficial com OpenAI ou NocoBase.
 
 ## O que você pode fazer
@@ -18,6 +16,30 @@ O aplicativo reúne **Tarefas → Monitor Codex → Uso do Codex**. Tem interfac
 - **Escolher o tema:** claro ou escuro, com layout adaptado a telas menores.
 
 Concluir uma tarefa não conclui o chat. A situação da tarefa é sua; o estado do chat vem dos eventos e das confirmações do Codex.
+
+## Veja as três abas do painel
+
+Capturas do aplicativo real em modo de demonstração e tema escuro. Todos os nomes, números, datas e vínculos são fictícios. Clique em uma imagem para ampliá-la.
+
+### Tarefas
+
+Cadastre e edite tarefas pelo painel lateral, encontre-as pela busca ou pelo projeto e organize a situação do trabalho no Kanban. A tarefa continua acessível mesmo sem chat vinculado.
+
+![Aba Tarefas com cinco colunas do Kanban e tarefas fictícias.](docs/images/tarefas-demo.png)
+
+### Monitor Codex
+
+Acompanhe os estados dos chats, veja os contadores, vincule tarefas e acesse o Stand-by.
+
+![Aba Monitor Codex com estados de execução, vinculação e chats fictícios.](docs/images/monitor-demo.png)
+
+### Uso do Codex
+
+Consulte cota, próxima renovação e validade das redefinições. Analise tokens pelas abas de período, filtre projetos pessoais/profissionais, consulte registros arquivados e exporte CSV. O consumo geral da conta aparece separado dos registros locais dos chats.
+
+![Aba Uso do Codex com dados fictícios, períodos, filtros, gráficos e tabela de consumo por chat.](docs/images/uso-demo.png)
+
+Para explorar sem gravar dados, abra `http://127.0.0.1:13021/?demo=1#tarefas` depois de iniciar o aplicativo. A demonstração não consulta as APIs de tarefas, estados ou consumo.
 
 ## Instalação: escolha um caminho
 
@@ -53,26 +75,6 @@ O [guia manual](docs/INSTALACAO-MANUAL.md) explica cada etapa, a revisão dos ho
 Cadastrar um link sozinho não produz um evento nem confirma o estado de um chat parado. **Coletor conectado** significa que o processo local responde; a configuração dos hooks, a confiança e o recebimento de eventos são verificados separadamente. O painel avisa quando a configuração está pendente.
 
 Para editar ou reencontrar uma tarefa, volte à aba **Tarefas**. No monitor, **Atualizar link** permite trocar ou remover o vínculo. Stand-by guarda chats inativos e o acompanhamento retorna quando uma nova atividade é observada.
-
-## Imagens do painel
-
-Todas as imagens usam o modo de demonstração com **dados fictícios**, sem cards, conversas ou números de uma conta real.
-
-<details>
-<summary>Kanban de tarefas</summary>
-
-![Cadastro e Kanban de tarefas fictícias](docs/images/tarefas-demo.png)
-
-</details>
-
-<details>
-<summary>Consumo, períodos e filtros</summary>
-
-![Uso do Codex com consumo, períodos e filtros fictícios](docs/images/uso-demo.png)
-
-</details>
-
-Para explorar sem gravar dados, abra `http://127.0.0.1:13021/?demo=1#tarefas` depois de iniciar o aplicativo. A demonstração não consulta as APIs de tarefas, estados ou consumo.
 
 ## Abrir e encerrar
 
