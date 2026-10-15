@@ -2,7 +2,7 @@
 
 Organize tarefas e acompanhe seus chats do Codex em um painel local no navegador.
 
-**Windows · Node.js 24+ · MIT · versão 0.1.3**
+**Windows · Node.js 24+ · MIT · versão 0.1.4**
 
 O aplicativo reúne **Tarefas → Monitor Codex → Uso do Codex**. Tem interface e banco próprios, sem NocoBase, Docker ou extensão de navegador. É um projeto independente, sem vínculo oficial com OpenAI ou NocoBase.
 

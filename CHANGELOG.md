@@ -1,5 +1,11 @@
 # Histórico de versões
 
+## 0.1.4 — 15/10/2026
+
+- Colunas do Kanban de tarefas com fundos coloridos por situação e cabeçalhos destacados.
+- Cores adaptadas aos temas claro e escuro, preservando o contraste dos cartões.
+- Imagem de demonstração da aba Tarefas atualizada no README.
+
 ## 0.1.3 — 15/10/2026
 
 - Comando de hook compatível com CMD e PowerShell, incluindo Node em pasta com espaços.
