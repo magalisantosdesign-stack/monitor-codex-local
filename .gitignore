@@ -1,0 +1,12 @@
+node_modules/
+.local/
+config.local.json
+release/
+*.log
+*.sqlite
+*.sqlite-*
+*.db
+.env
+.env.*
+!.env.example
+*.zip

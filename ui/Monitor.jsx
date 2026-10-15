@@ -1,0 +1,53 @@
+import React,{useEffect,useRef,useState} from 'react';
+import {Alert,Button,Card,Col,Empty,Input,Row,Select,Space,Statistic,Tabs,Tag,Typography,theme} from 'antd';
+import TaskEditor,{chatId} from './TaskEditor.jsx';
+import {demo,request,saveTask,useTasks} from './api.js';
+const names={processando:'Processando',aguardando_aprovacao:'Aguardando aprovação',aguardando_resposta:'Aguardando resposta',respondido:'Respondido',interrompido:'Interrompido',sem_sinal:'Sem sinal',nao_confirmado:'Estado não confirmado',stand_by:'Stand-by'};
+const colors={processando:'#1677ff',aguardando_aprovacao:'#fa8c16',aguardando_resposta:'#d4a106',respondido:'#52c41a',interrompido:'#ff4d4f',sem_sinal:'#8c8c8c',nao_confirmado:'#8c8c8c',stand_by:'#722ed1'};
+const statuses=['processando','aguardando_aprovacao','aguardando_resposta','respondido','interrompido','sem_sinal','nao_confirmado'];
+const examples=statuses.slice(0,6).map((status,i)=>({id:i+1,title:['Preparar campanha fictícia','Revisar proposta fictícia','Escolher formato de exemplo','Gerar resumo de exemplo','Execução interrompida de exemplo','Chat sem eventos de exemplo'][i],project:'Demonstração',status:'em_andamento',linkCodex:'codex://threads/00000000-0000-4000-8000-'+String(i+1).padStart(12,'0'),demoStatus:status}));
+const demoStates=Object.fromEntries(examples.filter(row=>row.demoStatus!=='sem_sinal').map(row=>[chatId(row.linkCodex),{status:row.demoStatus,at:Date.parse('2026-01-01T12:00:00Z')}]));
+export default function Monitor(){
+ const {token}=theme.useToken(),tasks=useTasks(),rows=demo?examples:tasks.rows;
+ const [states,setStates]=useState(demo?demoStates:{}),[online,setOnline]=useState(demo),[instance,setInstance]=useState(''),[view,setView]=useState('ativos'),[filter,setFilter]=useState('todos');
+ const [setup,setSetup]=useState(null);
+ const [selected,setSelected]=useState(),[link,setLink]=useState(''),[busy,setBusy]=useState(false),[editor,setEditor]=useState(false),[editing,setEditing]=useState(null),[error,setError]=useState(''),[notice,setNotice]=useState('');
+ const pending=useRef(false),mounted=useRef(true),epoch=useRef(0);
+ async function poll(){const version=++epoch.current;if(demo)return;
+  try{const value=await request('/states');if(value.service!=='codex-monitor')throw Error('Coletor não reconhecido.');if(mounted.current&&version===epoch.current){setStates(value.states||{});setSetup(value.setup||null);setInstance(value.instanceId);setOnline(true);}}
+  catch{if(mounted.current&&version===epoch.current)setOnline(false);}
+ }
+ useEffect(()=>{mounted.current=true;let running=false;poll();const timer=setInterval(async()=>{if(running)return;running=true;try{await poll();}finally{running=false;}},3000);return()=>{mounted.current=false;epoch.current++;clearInterval(timer);};},[]);
+ async function action(run){if(demo||pending.current)return;pending.current=true;setBusy(true);setError('');try{await run();await poll();}catch(failure){setError(failure.message);}finally{pending.current=false;if(mounted.current)setBusy(false);}}
+ async function bind(){const id=chatId(link),row=rows.find(item=>item.id===selected);if(!id||!row){setError('Escolha uma tarefa e informe um link local ou ID válido.');return;}await action(async()=>{await saveTask({linkCodex:'codex://threads/'+id},row.id);setLink('');setSelected(undefined);setNotice('Chat vinculado.');await tasks.reload();});}
+ const grouped=new Map();for(const row of rows){const id=chatId(row.linkCodex);if(id){if(!grouped.has(id))grouped.set(id,{chat:id,bindings:[]});grouped.get(id).bindings.push(row);}}
+ const chats=[...grouped.values()].map(row=>({...row,state:states[row.chat],status:states[row.chat]?.standby?'stand_by':online?(states[row.chat]?.displayStatus||states[row.chat]?.status||'sem_sinal'):'nao_confirmado'}));
+ const backgrounds={processando:token.colorInfoBg,aguardando_aprovacao:token.colorWarningBg,aguardando_resposta:token.colorWarningBg,respondido:token.colorSuccessBg,interrompido:token.colorErrorBg,sem_sinal:token.colorFillAlter,nao_confirmado:token.colorFillAlter,stand_by:token.colorFillAlter};
+ return <Space direction="vertical" size="large" style={{width:'100%'}}>
+  <Space wrap><Typography.Title level={3} style={{margin:0}}>Monitor Codex</Typography.Title><Tag color={online?'green':'default'}>{demo?'Demonstração · dados fictícios':online?'Coletor conectado':'Estado não confirmado'}</Tag><Button type="primary" disabled={busy} onClick={()=>{setEditing(null);setEditor(true);}}>Cadastrar nova tarefa</Button><Button disabled={demo||busy} onClick={()=>{poll();tasks.reload();}}>Atualizar</Button></Space>
+  {!online&&<Alert type="warning" showIcon message="Aplicativo desconectado" description="Reabra o atalho Monitor Codex. Os estados abaixo não puderam ser confirmados."/>}
+  {!demo&&setup?.configured===false&&<Alert type="warning" showIcon message="Configuração do Codex pendente" description={'Foram encontrados '+setup.events+' de '+setup.expected+' eventos desta cópia. Abra Configurar-Codex.cmd na pasta do monitor, confirme a instalação e revise a confiança dos novos hooks no Codex.'}/>}
+  {!demo&&setup?.status==='unavailable'&&<Alert type="warning" showIcon message="Não foi possível verificar a configuração do Codex" description="Execute Diagnosticar-Monitor.cmd. A configuração existente foi preservada."/>}
+  {!demo&&setup?.configured&&chats.length>0&&chats.every(row=>!row.state?.at)&&<Alert type="info" showIcon message="Aguardando o primeiro sinal do Codex" description="Os eventos estão instalados. Revise a confiança dos novos hooks no Codex e, se necessário, feche e abra o Codex. O acompanhamento começa com uma nova atividade em um chat vinculado."/>}
+  {(error||tasks.error)&&<Alert type="error" showIcon message={error||tasks.error}/>}{notice&&<Alert type="success" showIcon message={notice} closable onClose={()=>setNotice('')}/>}
+  {rows.some(row=>row.linkCodex&&!chatId(row.linkCodex))&&<Alert type="warning" showIcon message="Existe um link não reconhecido. Edite a tarefa na aba Tarefas para corrigi-lo."/>}
+  <Row gutter={[16,16]}>{statuses.slice(0,4).map(status=><Col xs={24} sm={12} xl={6} key={status}><Card><Statistic title={names[status]} value={chats.filter(row=>row.status===status).length}/></Card></Col>)}</Row>
+  <Card title="Vincular um chat"><Space wrap><Select aria-label="Escolha uma tarefa" showSearch optionFilterProp="label" placeholder="Escolha uma tarefa" value={selected} onChange={setSelected} style={{width:280,maxWidth:'100%'}} options={rows.map(row=>({value:row.id,label:row.title+' · '+(row.project||'Sem projeto')}))}/><Input aria-label="Link do chat para vincular" placeholder="codex://threads/… ou ID do chat" value={link} onChange={event=>setLink(event.target.value)} style={{width:320,maxWidth:'100%'}}/><Button type="primary" disabled={demo} loading={busy} onClick={bind}>Vincular</Button></Space><Typography.Paragraph type="secondary" style={{marginTop:12,marginBottom:0}}>Cadastre em Tarefas ou pelo botão acima. Trocar o vínculo preserva o consumo já registrado.</Typography.Paragraph></Card>
+  <Tabs activeKey={view} onChange={key=>{setView(key);setFilter('todos');}} items={[{key:'ativos',label:'Em acompanhamento'},{key:'stand_by',label:'Stand-by ('+chats.filter(row=>row.status==='stand_by').length+')'}]}/>
+  {view==='ativos'&&<Space><Typography.Text>Mostrar:</Typography.Text><Select aria-label="Filtrar estados dos chats" value={filter} onChange={setFilter} options={[{value:'todos',label:'Todos os vinculados'},...statuses.map(value=>({value,label:names[value]}))]} style={{minWidth:210}}/></Space>}
+  <Row wrap={false} gutter={12} style={{overflowX:'auto',paddingBottom:12}} aria-label="Kanban de chats do Codex">
+   {(view==='stand_by'?['stand_by']:statuses.filter(status=>filter==='todos'||status===filter)).map(status=>{const cards=chats.filter(row=>row.status===status);return <Col flex="0 0 270px" key={status}><Card size="small" title={<Space><Typography.Text strong>{names[status]}</Typography.Text><Tag>{cards.length}</Tag></Space>} style={{minHeight:390,height:'100%',background:backgrounds[status],borderTop:'3px solid '+colors[status]}}>
+    <Space direction="vertical" size={12} style={{width:'100%'}}>{!cards.length&&<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Nenhum chat"/>}{cards.map(row=><Card key={row.chat} size="small" style={{background:token.colorBgContainer}}><Space direction="vertical" size={9} style={{width:'100%'}}>
+     <Typography.Text strong style={{overflowWrap:'anywhere'}}>{row.bindings.map(task=>task.title).join(' / ')}</Typography.Text>
+     {row.bindings.map(task=><Space key={task.id} direction="vertical" size={4}><Typography.Text type="secondary">{task.project||'Sem projeto'}</Typography.Text><Button type="link" size="small" style={{padding:0}} disabled={busy} onClick={()=>{setEditing(task);setEditor(true);}}>Atualizar link</Button></Space>)}
+     {(status==='stand_by'||(!row.state?.questionPending&&!row.state?.approvalPending&&['respondido','interrompido','sem_sinal'].includes(status)))&&<Button size="small" disabled={demo||!online||busy} onClick={()=>action(async()=>{await request('/standby',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:row.chat,enabled:status!=='stand_by'})});setNotice(status==='stand_by'?'Chat retomado.':'Chat guardado em Stand-by.');})}>{status==='stand_by'?'Retomar acompanhamento':'Colocar em Stand-by'}</Button>}
+     <Typography.Text type="secondary" style={{fontSize:12}}>{row.state?.at?'Último sinal: '+new Date(row.state.at).toLocaleString('pt-BR'):'Aguardando o primeiro evento deste chat'}</Typography.Text>
+     {(status==='nao_confirmado'||row.state?.verification?.confirmed===false)&&<Space direction="vertical" size={6}><Typography.Text type="secondary">{'Último estado observado: '+(names[row.state?.status]||'Sem sinal')+'. Conferindo automaticamente.'}</Typography.Text><Button size="small" disabled={demo||!online||busy} onClick={()=>action(()=>request('/recheck',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:row.chat,instanceId:instance})}))}>Tentar novamente</Button></Space>}
+     <Typography.Link disabled={demo} href={demo?undefined:'codex://threads/'+row.chat}>Abrir chat</Typography.Link>
+    </Space></Card>)}</Space>
+   </Card></Col>;})}
+  </Row>
+  <Typography.Text type="secondary">Respondido indica uma resposta do chat. A situação da tarefa é alterada por você na aba Tarefas.</Typography.Text>
+  <TaskEditor open={editor} task={editing} onClose={()=>setEditor(false)} onSaved={result=>{tasks.reload();poll();setNotice(result.monitorPending?'Tarefa salva. A sincronização será tentada automaticamente.':'Tarefa salva.');}}/>
+ </Space>;
+}
