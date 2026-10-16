@@ -20,6 +20,7 @@ test('Standalone HTTP: real tasks, origin/session controls, hooks, restart and o
  const stop=async()=>{const done=new Promise(resolve=>child.once('exit',resolve));assert.equal((await send('/shutdown',{instanceId:info.instanceId})).status,200);await Promise.race([done,delay(7000).then(()=>{throw Error('Shutdown timeout');})]);assert.ok(child.exitCode===0,output);};
  try{
   info=await start();assert.equal(info.service,'codex-monitor-local');assert.equal((await fetch(origin+'/')).status,200);assert.match((await fetch(origin+'/')).headers.get('content-security-policy'),/frame-ancestors 'none'/);
+  const favicon=await fetch(origin+'/monitor.ico');assert.equal(favicon.status,200);assert.equal(favicon.headers.get('content-type'),'image/x-icon');assert.deepEqual(Buffer.from(await favicon.arrayBuffer()).subarray(0,4),Buffer.from([0,0,1,0]));
   assert.equal((await fetch(origin+'/api/tasks',{headers:{Origin:'https://example.invalid'}})).status,403);assert.equal((await fetch(origin+'/api/tasks',{headers:{'Sec-Fetch-Site':'cross-site'}})).status,403);
   assert.equal((await fetch(origin+'/api/tasks',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:'{"title":"Forbidden"}'})).status,403);
   assert.equal((await send('/api/tasks',{title:'Forbidden'},'POST',{'X-Monitor-Session':'é'.repeat(64)})).status,403);assert.equal((await fetch(origin+'/app-info')).status,200,'Malformed tokens cannot crash the server');

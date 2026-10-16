@@ -2,7 +2,7 @@
 
 Organize tarefas e acompanhe seus chats do Codex em um painel local no navegador.
 
-**Windows · Node.js 24+ · MIT · versão 0.1.4**
+**Windows · Node.js 24+ · MIT · versão 0.1.5**
 
 O aplicativo reúne **Tarefas → Monitor Codex → Uso do Codex**. Tem interface e banco próprios, sem NocoBase, Docker ou extensão de navegador. É um projeto independente, sem vínculo oficial com OpenAI ou NocoBase.
 
@@ -87,9 +87,11 @@ Depois de extrair o pacote em uma **pasta permanente**, você pode criar um atal
 3. Escolha **Enviar para → Área de trabalho (criar atalho)**.
 4. Na Área de Trabalho, renomeie o atalho para **Monitor Codex Local**.
 
+Para usar o ícone personalizado, clique com o botão direito no atalho e abra **Propriedades → Atalho → Alterar ícone → Procurar**. Selecione **public/monitor.ico** dentro da pasta do aplicativo, confirme em **OK** e clique em **Aplicar**. Esse mesmo ícone aparece na aba do navegador.
+
 Dê dois cliques no atalho para iniciar o aplicativo e abrir o navegador. O atalho deve apontar para **Abrir-Monitor.cmd**, pois esse arquivo inicia o painel. Salvar apenas o endereço no navegador não inicia o processo quando ele está desligado.
 
-Se instalou com ajuda do Codex, pode pedir: **“Crie um atalho na minha Área de Trabalho para o Abrir-Monitor.cmd desta instalação, com o nome Monitor Codex Local.”**
+Se instalou com ajuda do Codex, pode pedir: **“Crie um atalho na minha Área de Trabalho para o Abrir-Monitor.cmd desta instalação, com o nome Monitor Codex Local e o ícone public/monitor.ico.”**
 
 Mantenha a pasta completa do aplicativo. Se movê-la, recrie o atalho e reconfigure os hooks conforme o [guia manual](docs/INSTALACAO-MANUAL.md). Criar o atalho não configura início automático com o Windows.
 

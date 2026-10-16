@@ -1,5 +1,11 @@
 # Histórico de versões
 
+## 0.1.5 — 16/10/2026
+
+- Ícone personalizado para a aba do navegador e o atalho do Windows, em sete tamanhos.
+- Guias de instalação com criação de atalho e escolha do ícone, incluindo instalação assistida pelo Codex.
+- Ícone incluído no pacote público, com validação de formato e teste de entrega pelo servidor local.
+
 ## 0.1.4 — 15/10/2026
 
 - Colunas do Kanban de tarefas com fundos coloridos por situação e cabeçalhos destacados.

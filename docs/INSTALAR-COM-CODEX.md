@@ -13,4 +13,6 @@ Execute este roteiro somente quando o usuário pedir para preparar/instalar esta
 9. Teste Encerrar aplicativo por clique e confirmação, verificando saída somente do PID desta cópia; reabra e confira persistência. Fechar aba não significa encerrar. Nunca use taskkill genérico contra Node, Docker ou Codex.
 10. Entregue caminho permanente, como abrir/configurar/encerrar, status dos testes e pendências reais. Explique a criação opcional de um atalho na Área de Trabalho conforme o README. Quando o usuário pedir esse atalho, resolva a Área de Trabalho pela pasta conhecida do Windows (incluindo redirecionamento ao OneDrive), aponte para Abrir-Monitor.cmd desta cópia e use sua pasta como diretório de trabalho; não sobrescreva um atalho existente sem conferir o destino. Não criar atalho de Inicializar, publicar na internet, migrar dados ou criar repositório sem pedido.
 
+Ao criar um atalho solicitado, use public/monitor.ico desta instalação em IconLocation, preservando destino e diretório de trabalho de Abrir-Monitor.cmd.
+
 Se uma etapa depender de login, UAC, confiança ou recurso indisponível, termine o trabalho independente, mantenha a pendência explícita e peça só a intervenção necessária. Não trate passagem de tempo como autorização.

@@ -5,7 +5,7 @@ import {root,config} from './config.mjs';
 const session=randomBytes(32).toString('hex');
 const {version}=JSON.parse(await readFile(join(root,'package.json'),'utf8'));
 const origin='http://127.0.0.1:'+config.port;
-const assets=new Map([['/',['index.html','text/html; charset=utf-8']],['/app.js',['app.js','text/javascript; charset=utf-8']],['/app.css',['app.css','text/css; charset=utf-8']],['/app.js.LEGAL.txt',['app.js.LEGAL.txt','text/plain; charset=utf-8']]]);
+const assets=new Map([['/',['index.html','text/html; charset=utf-8']],['/monitor.ico',['monitor.ico','image/x-icon']],['/app.js',['app.js','text/javascript; charset=utf-8']],['/app.css',['app.css','text/css; charset=utf-8']],['/app.js.LEGAL.txt',['app.js.LEGAL.txt','text/plain; charset=utf-8']]]);
 export function allowRequest(req,res){
  res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('X-Frame-Options','DENY');res.setHeader('Referrer-Policy','no-referrer');
  if(req.headers.host!=='127.0.0.1:'+config.port||req.headers.origin&&req.headers.origin!==origin||req.headers['sec-fetch-site']==='cross-site'){res.writeHead(403);res.end();return false;}

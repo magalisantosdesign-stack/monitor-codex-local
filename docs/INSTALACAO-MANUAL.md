@@ -42,6 +42,8 @@ Na pasta permanente do aplicativo, clique com o botão direito em **Abrir-Monito
 
 Dois cliques nesse atalho iniciam o aplicativo e abrem o painel no navegador. Use o arquivo **Abrir-Monitor.cmd** como destino; um favorito com o endereço do painel só funciona quando o processo já está ligado.
 
+Para personalizar o ícone: botão direito no atalho → **Propriedades → Atalho → Alterar ícone → Procurar**. Escolha **public/monitor.ico** na pasta do aplicativo e confirme em **OK → Aplicar**.
+
 Não mova apenas o CMD para a Área de Trabalho: ele depende dos outros arquivos da pasta. Se mudar a pasta completa de lugar, recrie o atalho, execute Configurar-Codex.cmd no novo local e revise novamente os hooks. O atalho da Área de Trabalho não inicia o aplicativo com o Windows.
 
 ## 6. Encerrar

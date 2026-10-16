@@ -9,6 +9,13 @@ export async function checkDistribution(){
  for(const name of files){
   assert.ok(!name.includes('..')&&!/^(?:[a-z]:|[\\/])/i.test(name));assert.ok(!/(?:\.local|config\.local|node_modules|\.git\/|\.sqlite|\.log$|session\.private)/i.test(name),'Arquivo privado: '+name);
   assert.ok((await stat(join(distributionRoot,name))).isFile());const bytes=await readFile(join(distributionRoot,name));
+  if(name.endsWith('.ico')){
+   assert.equal(name,'public/monitor.ico','Ícone fora da lista pública.');
+   assert.ok(bytes.length>=6&&bytes.readUInt16LE(0)===0&&bytes.readUInt16LE(2)===1,'ICO inválido.');
+   const frames=bytes.readUInt16LE(4);assert.ok(frames>0&&frames<=16&&bytes.length>=6+frames*16,'Diretório ICO inválido.');
+   for(let i=0;i<frames;i++){const entry=6+i*16,size=bytes.readUInt32LE(entry+8),offset=bytes.readUInt32LE(entry+12);assert.ok(offset>=6+frames*16&&size>=8&&offset+size<=bytes.length&&bytes.subarray(offset,offset+8).equals(Buffer.from([137,80,78,71,13,10,26,10])),'Frame ICO inválido.');}
+   continue;
+  }
   if(name.endsWith('.png')){
    assert.ok(name.startsWith('docs/images/')&&bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])),'Imagem fora da galeria pública ou PNG inválido: '+name);
    continue; // Gallery pixels are reviewed in demo mode, not interpreted as text.
@@ -23,7 +30,7 @@ export async function checkDistribution(){
    assert.ok((await stat(join(dirname(join(distributionRoot,name)),target.split('#')[0]))).isFile(),'Link local ausente em '+name+': '+target);
   }
  }
- for(const name of ['public/app.js','public/app.css','public/index.html','public/app.js.LEGAL.txt','LICENSE'])assert.ok(files.includes(name),'Arquivo necessário ausente: '+name);
+ for(const name of ['public/app.js','public/app.css','public/index.html','public/monitor.ico','public/app.js.LEGAL.txt','LICENSE'])assert.ok(files.includes(name),'Arquivo necessário ausente: '+name);
  for(const name of ['ui/App.jsx','ui/Tasks.jsx','ui/Monitor.jsx','ui/Usage.jsx'])assert.ok(!/ctx\.|@nocobase/.test(await readFile(join(distributionRoot,name),'utf8')),'Dependência NocoBase em '+name);
  return files;
 }
