@@ -78,9 +78,26 @@ Para editar ou reencontrar uma tarefa, volte à aba **Tarefas**. No monitor, **A
 
 ## Abrir e encerrar
 
+### Criar um atalho na Área de Trabalho
+
+Depois de extrair o pacote em uma **pasta permanente**, você pode criar um atalho para abrir o painel sem precisar procurar essa pasta:
+
+1. No Explorador de Arquivos, localize **Abrir-Monitor.cmd** na pasta extraída.
+2. Clique nele com o botão direito. No Windows 11, clique em **Mostrar mais opções**, se necessário.
+3. Escolha **Enviar para → Área de trabalho (criar atalho)**.
+4. Na Área de Trabalho, renomeie o atalho para **Monitor Codex Local**.
+
+Dê dois cliques no atalho para iniciar o aplicativo e abrir o navegador. O atalho deve apontar para **Abrir-Monitor.cmd**, pois esse arquivo inicia o painel. Salvar apenas o endereço no navegador não inicia o processo quando ele está desligado.
+
+Se instalou com ajuda do Codex, pode pedir: **“Crie um atalho na minha Área de Trabalho para o Abrir-Monitor.cmd desta instalação, com o nome Monitor Codex Local.”**
+
+Mantenha a pasta completa do aplicativo. Se movê-la, recrie o atalho e reconfigure os hooks conforme o [guia manual](docs/INSTALACAO-MANUAL.md). Criar o atalho não configura início automático com o Windows.
+
+### Comandos do aplicativo
+
 | Ação | Como fazer |
 | --- | --- |
-| Abrir | **Abrir-Monitor.cmd** |
+| Abrir | Atalho **Monitor Codex Local** ou **Abrir-Monitor.cmd** |
 | Encerrar | **Encerrar aplicativo** no topo, com confirmação; ou **Encerrar-Monitor.cmd** |
 | Diagnosticar | **Diagnosticar-Monitor.cmd** |
 | Preparar/reconfigurar eventos | **Configurar-Codex.cmd** |

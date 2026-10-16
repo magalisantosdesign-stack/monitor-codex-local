@@ -23,3 +23,5 @@ Distribuição para GitHub usa uma cópia limpa formada exclusivamente pelo mani
 A suíte node --test deve usar --test-concurrency=1 no Windows para evitar disputa de recursos entre os processos de navegador/instalador e manter os limites de tempo úteis em runners menores. Isso não altera as regras de execução do aplicativo.
 
 O Kanban de tarefas usa fundos suaves por situação em toda a coluna, com cabeçalho mais destacado: cinza para Não iniciado, azul para Em andamento, amarelo para Aguardando, laranja para Pausado e verde para Concluído. Misturar a cor da situação com colorBgContainer do tema para manter legibilidade nos modos claro e escuro; cartões internos preservam o fundo do tema.
+
+A instalação documenta o atalho opcional da Área de Trabalho para Abrir-Monitor.cmd, sem mover o CMD nem configurar autostart. Se o usuário pedir a criação pelo agente, resolver a pasta conhecida Desktop do Windows, preservar atalhos existentes e conferir destino/diretório de trabalho da própria cópia. Mover a instalação exige recriar o atalho e reconfigurar/revisar os hooks.

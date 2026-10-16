@@ -36,7 +36,15 @@ Em **Tarefas**, cadastre o nome e a situação; projeto e link são opcionais. D
 
 Retome uma atividade no chat vinculado. O primeiro evento real inicia o acompanhamento; um chat parado pode continuar em Sem sinal. O estado do chat e a situação da tarefa são independentes.
 
-## 5. Encerrar
+## 5. Criar um atalho na Área de Trabalho (opcional)
+
+Na pasta permanente do aplicativo, clique com o botão direito em **Abrir-Monitor.cmd**. No Windows 11, escolha **Mostrar mais opções**, se necessário. Depois selecione **Enviar para → Área de trabalho (criar atalho)** e renomeie o atalho para **Monitor Codex Local**.
+
+Dois cliques nesse atalho iniciam o aplicativo e abrem o painel no navegador. Use o arquivo **Abrir-Monitor.cmd** como destino; um favorito com o endereço do painel só funciona quando o processo já está ligado.
+
+Não mova apenas o CMD para a Área de Trabalho: ele depende dos outros arquivos da pasta. Se mudar a pasta completa de lugar, recrie o atalho, execute Configurar-Codex.cmd no novo local e revise novamente os hooks. O atalho da Área de Trabalho não inicia o aplicativo com o Windows.
+
+## 6. Encerrar
 
 Use **Encerrar aplicativo** no topo e confirme. Aguarde a tela de encerramento e depois feche a aba. Se já fechou a aba, execute **Encerrar-Monitor.cmd**. Fechar a aba sozinho não encerra o Node.
 
